@@ -1,0 +1,102 @@
+%
+% <D.1> Text
+%
+\newcommand{\begen} 		{\begin{enumerate}}
+\newcommand{\stopen} 		{\end{enumerate}}
+\newcommand{\noi}			{\noindent}
+\newcommand{\fig}		[1] {\hyperref[#1]{figure \ref*{#1}}}
+\newcommand{\nn}          	{\nonumber}
+\renewcommand{\tt}		[1]	{\texttt{#1}}
+\newcommand{\blue}		[1]	{\textcolor{blue}{#1}}
+\newcommand{\dblue}		[1]	{\textcolor{Blue!70!NavyBlue}{#1}}
+\newcommand{\blueit}	[1]	{\blue{\emph{#1}}}
+\newcommand{\idblue}	[1]	{\dblue{\emph{#1}}}
+\newcommand{\ddblue}	[1]	{\dblue{\textbf{#1}}}
+\newcommand{\grayit}	[1]	{\gray{\emph{#1}}}
+\newcommand{\dgray}		[1]	{\textcolor{Gray!80!Black}{#1}}
+\newcommand{\idgray}	[1]	{\dgray{\emph{#1}}}
+\newcommand{\dgreen}	[1]	{\textcolor{Black!40!OliveGreen}{#1}}
+\newcommand{\dorange}	[1]	{\textcolor{Orange!40!Sienna}{#1}}
+\newcommand{\red}		[1]	{\textcolor{red}{#1}}
+\newcommand{\dred}		[1]	{\textcolor{BrickRed!60!Red}{#1}}
+\newcommand{\idred} 	[1] {\dred{\emph{#1}}}
+\newcommand{\clarify}	    {\dred{\textbf{\#\#\#\#}}\xspace}
+\newcommand{\gray}		[1]	{\textcolor{Gray}{#1}}
+\newcommand{\green}		[1]	{\textcolor{DarkGreen}{#1}}
+\newcommand{\magenta}	[1]	{\textcolor{magenta}{#1}}
+\newcommand{\orange}	[1]	{\textcolor{orange}{#1}}
+\newcommand{\begar}			{\begin{itemize}[$\dblue{\rightarrow}$]\itsep{0}}
+\newcommand{\stopar}		{\end{itemize}}
+\newcommand{\itsep}		[1]	{\setlength{\itemsep}{#1pt}}
+\newcommand{\hl}          	{\\\hline}
+
+
+\newcommand{\ceil}         	[1] {\lceil#1\rceil}
+\newcommand{\floor}        	[1] {\lfloor#1\rfloor}
+\newcommand{\explainedrel} 	[2] {\stackrel{\dblue{\text{#1}}}{#2}}
+\newcommand{\bstack} 		[2] {\stackrel{\dblue{\text{#1}}}{#2}}
+\newcommand{\fracd} 		[2] {\frac{\partial #1}{\partial #2}}
+\newcommand{\KL}			[1] {\mathrm{KL}\!\left(#1\right)}
+\newcommand{\R}			    	{\mathbb R}
+\newcommand{\st}		    	{\,|\,}
+\newcommand{\sign}		  		{\mathrm{sign}\,}
+\newcommand{\supp}				{\mathrm{supp}}
+
+% Distributions
+\newcommand{\Be}	 {\mathrm{Be}}
+\newcommand{\Beta}	 {\mathrm{Beta}}
+\newcommand{\Bi}	 {\mathrm{Bi}}
+\newcommand{\Dir}	 {\mathrm{Dirichlet}}
+\newcommand{\Expo}	 {\mathrm{Expo}}
+\newcommand{\Gam}	 {\mathrm{Gamma}}
+\newcommand{\iid}	 {\text{iid.}\xspace}
+\newcommand{\Poi}	 {\mathrm{Poi}}
+\newcommand{\simiid} {\sim_{\mathrm{iid.}}}
+
+% Probability stuff
+\newcommand{\E} {\mathbb E}
+\newcommand{\V}	{\mathbb V}
+
+% spacing
+\newcommand{\esp}		{\quad\!\!}
+\newcommand{\spe}		{\quad\!\!=\quad\!\!}
+% norms
+\newcommand{\norm}		[2]	{\left\|#1\right\|_{#2}}
+	\newcommand{\anorm}	[1]	{\norm{#1}{1}}
+	\newcommand{\bnorm}	[1]	{\norm{#1}{2}}
+	\newcommand{\inorm}	[1]	{\norm{#1}{\infty}}
+	\newcommand{\xnorm}	[1]	{\norm{#1}{}}
+
+% formatting in equations
+\newcommand{\abs}	[1]	{\left|#1\right|}
+\newcommand{\eq}	[1]	{\begin{equation}#1\end{equation}}
+\newcommand{\eqa}	[1]	{\begin{eqnarray}#1\end{eqnarray}}
+\newcommand{\aleq}	[1]	{\begin{align}#1\end{align}}
+\newcommand{\inv}		{^{-1}}
+\newcommand{\transp}	{^\mathrm{t}}
+\newcommand{\itransp}	{^{-\mathrm{t}}}
+\newcommand{\pab}	[1]	{\left\{#1\right\}} % {	}
+\newcommand{\pac}	[1]	{\left[#1\right]}	% [	]
+\newcommand{\pat}	[1]	{\left(#1\right)}	% (	)
+\newcommand{\syst}	[1]	{\left\{\begin{array}{r c l}#1\end{array}\right.}
+\newcommand{\vb}	[1]	{\boldsymbol{#1}}
+% vector operations
+\newcommand{\grad}	[1]	{\pat{\begin{array}{c}#1\end{array}}}
+\newcommand{\scal}	[1]	{\left\langle #1 \right\rangle}
+% matrix operations
+\newcommand{\matd}	[1]	{\pat{\begin{array}{cc}#1\end{array}}}
+\newcommand{\matt}	[1]	{\pat{\begin{array}{ccc}#1\end{array}}}
+\newcommand{\tr}		{\mathrm{tr\,}}
+
+% Integral Measures
+%
+\newcommand{\dd}	{\,\mathrm{d}}			% straight d
+
+\newcommand{\ds}	{\dd s}
+\newcommand{\dt}	{\dd t}
+\newcommand{\du}	{\dd u}
+\newcommand{\dv}	{\dd v}
+\newcommand{\dw}	{\dd w}
+\newcommand{\dx}	{\dd x}
+\newcommand{\dy}	{\dd y}
+\newcommand{\dz}	{\dd z}

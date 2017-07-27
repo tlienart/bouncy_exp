@@ -1,0 +1,130 @@
+\input{../../misc/preamble.tex}
+\input{../../misc/commands.tex}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+	{\Large \bfseries Probabilistic Matrix Factorisation}\\[.5cm]
+	{\large T. Lienart, L. Hasenclever}\\[.3cm]
+	{Summer 2017}
+\end{center}
+
+\section{Simple PMF model}
+
+\subsection{Model description}
+Matrix $R\in\R^{n\times p}$ with elements $r_{ij}$. These elements are typically on a discrete scale from 1 to 5 (ratings) but we centre them and consider them to be on a continuous scale. We have access to a mask of the matrix. We can write the dataset $\mathcal D$ as
+%
+\eqa{
+	\mathcal D &=& \{ r_{ij} \st i\in\mathcal I, j\in \mathcal J \}
+}
+%
+where the index sets $\mathcal I$ and $\mathcal J$ are subsets of the indices for the rows and columns.
+
+We consider the following simple probabilistic model for all entries:
+%
+\eqa{
+	p(r_{ij} \st u_{i}, v_{j}, \sigma) &\propto& \mathcal N(r_{ij}; \scal{u_{i}, v_{j}}, \sigma^{2}_{r})
+}
+%
+where the $u_{i},v_{j} \in \R^{d}$ with $d$ the dimension of the latent spaces and $\sigma_{r}$ is the uncertainty on the entries. For $u$ and $v$ we assume centred spherical Gaussian priors with standard deviation $\sigma_{u}$ and $\sigma_{v}$. For the sake of comparing simple models, we assume $\sigma_{r}, \sigma_{u}, \sigma_{v}$ are fixed and given.\footnote{That way we avoid having to run an external Gibbs sampler to update these values which complexifies the comparison of algorithms.} 
+
+\subsection{Considerations on a single factor for BPS}
+
+Each observed entry corresponds to a factor with the Gaussian model described earlier. Ignoring constants, the energy associated with such a factor:
+%
+\eqa{
+	\mathcal E_{ij}(u_{i}, v_{j}) &=& 0.5\sigma^{-2}_{r}\pat{r_{ij}-\scal{u_{i},v_{j}}}^{2}
+}
+%
+Since the analysis won't change between observed factor we can drop all indices. Further, let us introduce $x:=(u; v)$ and write $x_{u}=u$ and $x_{v}=v$. Let also and $e(x):=(\scal{x_{u},x_{v}}-r)$ then, 
+\eqa{
+	\mathcal E(x) &=& 0.5\sigma^{-2}_{r}e(x)^{2}.
+}
+We are interested in the intensity associated with this factor:
+%
+\eqa{
+	\chi(t) &=& \scal{\nabla E(x+tw) , w}^{+}\label{eq:loc-intensity}
+}
+%
+where $w$ has the same structure as $x$. The gradient has the form
+\eqa{ \syst{
+	\nabla_{x_{u}}\mathcal E(x) &=& \gamma(x)x_{v}\\
+	\nabla_{x_{v}}\mathcal E(x) &=& \gamma(x)x_{u}
+	}
+}
+where $\gamma(x)=\sigma^{-2}_{r}e(x)$. Now, it is straightforward to show that the inner product in \eqref{eq:loc-intensity} is a third order polynomial in $t$ of the form
+%
+\eqa{
+	\scal{\nabla E(x+tw) , w} &=& \gamma(x+tw) \pac{\scal{x_{u},w_{v}}+ \scal{x_{v}, w_{u}} + 2t\scal{w_{u},w_{v}}}. \label{eq:polynomial1}
+}
+\subsubsection{Roots of the polynomial}
+Since the intensity is given by the positive part of the polynomial, it is important to locate its roots. Let $t_{0}$ denote the root of the rightmost parenthesis in \eqref{eq:polynomial1} and $t_{-,+}$ denote the other two roots of the polynomial. Clearly,
+%
+\eqa{
+	t_{0} &=& - { d(x,w) \over 2 s(w)} 
+}
+%
+where $d(x,w):=\scal{x_{u},w_{v}}+\scal{x_{v},w_{u}}$ and $s(w):=\scal{w_{u},w_{v}}$. The other two roots are obtained by setting $\gamma(x+tw)$ to zero or equivalently $e(x+tw)$ with
+%
+\eqa{
+	e(x+tw) &=& s(w)t^{2} + d(x,w)t+e(x)\nn\\
+		&=& s(w) \pac{t^{2}-2t_{0}t + e(x)/s(w)}
+}
+%
+so that the roots are given by:
+%
+\eqa{
+	t_{-,+} &=& t_{0} \pm \sqrt{t_{0}^{2} + e(x)/ s(w)}.
+}
+%
+The polynomial can now be written explicitly as
+%
+\eqa{
+	\scal{\nabla E(x+tw) , w} &=& \kappa (t-t_{-})(t-t_{+}) (t-t_{0})
+}
+%
+where $\kappa=2(s(w)/\sigma_{r})^{2}$.
+\subsubsection{Sampling from the IPP}
+For a single factor described as above, sampling the corresponding IPP can be done in two parts: generate $\lambda\sim \mathrm{Exp}(1)$ then compute the inverse CDF at $\lambda$ i.e. find $t(\lambda)$ such that
+%
+\eqa{
+ 	\lambda &=& \Xi(t(\lambda)) \esp:=\esp \int_{0}^{t(\lambda)} \chi(t) \dt 
+}
+%
+It is in fact possible to determine $t(\lambda)$ accurately (see point \ref{ref:inverseop1}).
+
+\subsection{Local BPS}
+
+
+\appendix
+\section{Appendix}
+\subsection{\label{ref:inverseop1}Description of inverse CDF operator}
+The intensity is given by
+%
+\eqa{
+	\chi(t) &=& \max\{0,\kappa(t-t_{-})(t-t_{0})(t-t_{+})\}.
+}
+%
+where $\kappa\ge0$. The problem is to determine $t(\lambda; x,w)$ between $0$ and $\tau_{\text{ref}}$ (the refreshment time) such that
+%
+\eqa{
+	\lambda &=& \int_{0}^{t(\lambda)} \chi(t)\dt.
+}
+Note that it may be that there is no solution on the interval in which case $\tau_{\text{ref}}$ should be returned. Therefore we can assume $\kappa>0$ and that there is a solution on the interval. Recall that $t_{-,+}=t_{0}+\sqrt{\Delta}$ with $\Delta = t_{0}^{2}+e(x)/s(w)$. Upon inspection, a tree can be built with four different possible scenarios based on values of $\Delta$ and the roots. It is illustrated at figure \ref{fig:pmf-cases} below. 
+
+\begin{figure}[!h]
+\center
+	\includegraphics[width=.5\textwidth]{figs/pmf-cases}
+	\caption{\label{fig:pmf-cases}Different possible form of $\chi(t)$ over positive values of $t$. The tree splits are positive/negative: left branches indicate the root node is negative or zero and vice versa. The drawings at the bottom illustrate what the graph of $\chi(t)$ can look like with the black dots representing the roots. Case $A$ corresponds to the case where there are no roots greater than zero, case $B$ there is one positive root, $C$ two separate positive roots and $D$ three.}
+\end{figure}
+
+For a given $w$ and $x$, we can compute the roots and thereby know which case we are in. In what follows, we denote by $\Xi$ the integral of $\chi$ over $[0,t]$.
+
+\subsubsection*{Case B (+A)}
+In this case, $\Xi(t)$ is a fourth order polynomial starting at 0 and starts growing at the first root. We can shift it by the first root to make it start at the origin. For a given generated $\lambda$ we then just need to solve a quartic problem which can be done efficiently by software packages and retain the first positive root if there is one before $\tau_{\text{ref}}$. Case A is identical with a zero shift.
+
+\subsubsection*{Case D (+C)}
+In this case, $\Xi(t)$ starts at zero, at the first root starts growing like a fourth order polynomial then plateaus at the second root and stays flat until the third root then starts growing again. We can shift it by the first root to make it start at the origin. For a given generated $\lambda$, we need to check whether it is higher than the plateau or not. If it is, then we are in case B with a shift by the largest root. If it is not, then we are in case B with the second smallest root.
+
+\end{document}
