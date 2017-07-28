@@ -119,12 +119,24 @@ Note that it may be that there is no solution on the interval in which case $\ta
 	\caption{\label{fig:pmf-cases}Different possible form of $\chi(t)$ over positive values of $t$. The tree splits are positive/negative: left branches indicate the root node is negative or zero and vice versa. The drawings at the bottom illustrate what the graph of $\chi(t)$ can look like with the black dots representing the roots. Case $A$ corresponds to the case where there are no roots greater than zero, case $B$ there is one positive root, $C$ two separate positive roots and $D$ three.}
 \end{figure}
 
-For a given $w$ and $x$, we can compute the roots and thereby know which case we are in. In what follows, we denote by $\Xi$ the integral of $\chi$ over $[0,t]$.
+For a given $w$ and $x$, we can compute the roots and thereby know which case we are in. When considering the integral of the intensity, it appears that case $A$ and $B$ can be grouped in one base case, case $C$ and $D$ can also be grouped and expressed in that base case. See also the illustration \ref{fig:caseB+D}.
 
 \subsubsection*{Case B (+A)}
 In this case, $\Xi(t)$ is a fourth order polynomial starting at 0 and starts growing at the first root. We can shift it by the first root to make it start at the origin. For a given generated $\lambda$ we then just need to solve a quartic problem which can be done efficiently by software packages and retain the first positive root if there is one before $\tau_{\text{ref}}$. Case A is identical with a zero shift.
 
 \subsubsection*{Case D (+C)}
 In this case, $\Xi(t)$ starts at zero, at the first root starts growing like a fourth order polynomial then plateaus at the second root and stays flat until the third root then starts growing again. We can shift it by the first root to make it start at the origin. For a given generated $\lambda$, we need to check whether it is higher than the plateau or not. If it is, then we are in case B with a shift by the largest root. If it is not, then we are in case B with the second smallest root.
+
+\begin{figure}[!h]
+\center
+\includegraphics[width=.48\textwidth]{figs/caseB}
+\includegraphics[width=.48\textwidth]{figs/caseD}
+\caption{\label{fig:caseB+D}Illustration of case B (\textbf{left}) and case D (\textbf{right}). The intensity is represented as an black dashed line, the integral as the green continuous line. The shifts $s$ and $s_{1}$ are zero in case $A$ and $C$ respectively. }
+\end{figure}
+%\begin{figure}[!h]
+%\center
+%\caption{}
+%\end{figure}
+
 
 \end{document}
