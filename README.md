@@ -17,7 +17,7 @@ a=ratings.dat; sed s/::/,/g $a > _tmp; mv _tmp $a;
 ```
 
 The format of the file is now `i,j,rij,hash`.
-To make readings more efficient / faster, we produce three files one with just the rows, one with just the columns, one with just the ratings (centered).
+To make readings more efficient / faster, we produce three files one with just the rows, one with just the columns, one with just the ratings. (The file `splitmat.jl` is available in the `pmf/data` folder). 
 
 ```bash
 julia splitmat.jl ratings.dat;
