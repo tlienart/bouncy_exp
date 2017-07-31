@@ -4,7 +4,7 @@ println("[done in $(round(time()-ta,1))s]")
 
 print("loading other packages... "); ta = time()
 using JLD
-include("lbps.jl")
+include("pmf_lbps.jl")
 println("[done in $(round(time()-ta,1))s]")
 
 # Basic experiment format (this could be repeated in a for loop etc)
@@ -23,7 +23,7 @@ params = Dict(
     "FRATES"     => "data/rates.csv"
 )
 
-results = lbps(params)
+results = pmf_lbps(params)
 
 save("exp_$(EXPNAME).jld",
         "RESULTS",     results,

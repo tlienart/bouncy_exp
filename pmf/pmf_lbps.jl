@@ -1,7 +1,7 @@
 cprint(s, b)   = b ? print(s)   : nothing
 cprintln(s, b) = b ? println(s) : nothing
 
-function lbps(params::Dict, verb::Bool=true)::Dict
+function pmf_lbps(params::Dict, verb::Bool=true)::Dict
 
     d  = params["LATENT_D"]
     sU = params["SIGMA_U"]
