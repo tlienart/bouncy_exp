@@ -13,7 +13,7 @@
 \section{Simple PMF model}
 
 \subsection{Model description}
-Matrix $R\in\R^{n\times p}$ with elements $r_{ij}$. These elements are typically on a discrete scale from 1 to 5 (ratings) but we centre them and consider them to be on a continuous scale. We have access to a mask of the matrix. We can write the dataset $\mathcal D$ as
+Matrix $R\in\R^{n\times p}$ with elements $r_{ij}$. These elements are typically on a discrete scale from 1 to 5 (ratings) but we centre them and scale them by the range of rates (to standardise the approach) and consider them to be on a continuous scale. We have access to a mask of the matrix. We can write the dataset $\mathcal D$ as
 %
 \eqa{
 	\mathcal D &=& \{ r_{ij} \st i\in\mathcal I, j\in \mathcal J \}

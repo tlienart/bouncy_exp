@@ -1,4 +1,4 @@
-
+using ProgressMeter
 # following http://www.inference.org.uk/mackay/itprnn/ps/387.412.pdf
 
 function hmc(
@@ -21,6 +21,7 @@ function hmc(
     ll  = loglik(x)
     gll = gradloglik(x)
 
+    prog = Progress(steps, 1)
 
     for i in 1:steps
 
@@ -48,6 +49,7 @@ function hmc(
 
         # Store as of burnin
         i > burnin ? res[i-burnin] = x  : nothing
+        next!(prog)
     end
     res
 end

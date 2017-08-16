@@ -25,8 +25,10 @@ function pmf_lbps(params::Dict, verb::Bool=true)::Dict
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     cprint("preparing the graph... ", verb) ; ta = time()
 
-    # centre the rates
+    # centre and scale the rates
+    range  = maximum(rates)-minimum(rates)
     rates -= mean(rates)
+    rates /= range
 
     # there may be discrepancy with lines missing etc
     nU = maximum(rows)
@@ -104,6 +106,7 @@ function pmf_lbps(params::Dict, verb::Bool=true)::Dict
 
     results = Dict(
         "ALL_EVLIST"  => all_evlist,
-        "SIM_DETAILS" => details
+        "SIM_DETAILS" => details,
+        "RATES"       => rates       # the centred, scaled rates, for comp
         )
 end
