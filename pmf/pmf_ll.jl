@@ -1,7 +1,7 @@
 function pmf_ll(
             rows::Vector{Int},
             cols::Vector{Int},
-            rates::Vector{Int},
+            rates::Vector{Float},
             nrows::Int,
             ncols::Int,
             sr::Float64,
@@ -32,11 +32,10 @@ function pmf_ll(
             ui,vj = u[((i-1)*d+1):(i*d)], v[((j-1)*d+1):(j*d)]
 
             # then it's just a gaussian pdf and we add everything
-            s += (rk - dot(ui,vj))^2/(2sr)
+            s += (rk - dot(ui,vj))^2/(2sr^2)
         end
         # add the likelihoods corresponding to spherical priors
-        s += norm(u)^2/(2su) + norm(v)^2/(2sv)
-
+        s += norm(u)^2/(2su^2) + norm(v)^2/(2sv^2)
         -s
     end
     function gradloglik(x)
@@ -49,8 +48,8 @@ function pmf_ll(
         g = similar(x)
 
         # part associated with prior
-        g[mu] += u/su
-        g[mv] += v/sv
+        g[mu] += u/su^2
+        g[mv] += v/sv^2
 
         # part associated with rates
         for (k, rk) in enumerate(rates)
@@ -59,11 +58,11 @@ function pmf_ll(
             mvj   = ((j-1)*d+1):(j*d) # mask for vj in v
             ui,vj = u[mui], v[mvj]
             # grad in ui
-            g[mui] += (rk - dot(ui, vj)) * vj / (2sr)
+            g[mui] += (rk - dot(ui, vj)) * vj / sr^2
             # grad in vj
-            g[d*nrows+mvj] += (rk - dot(ui, vj)) * ui / (2sr)
+            g[d*nrows+mvj] += (rk - dot(ui, vj)) * ui / sr^2
         end
-        
+
         g
     end
     (loglik,gradloglik)

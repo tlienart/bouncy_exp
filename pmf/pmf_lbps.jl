@@ -1,7 +1,10 @@
-cprint(s, b)   = b ? print(s)   : nothing
-cprintln(s, b) = b ? println(s) : nothing
+function pmf_lbps(data::Dict, params::Dict, verb::Bool=true)::Dict
 
-function pmf_lbps(params::Dict, verb::Bool=true)::Dict
+    cprint("Starting LBPS...", verb) ; tb = time()
+
+    rows  = data["ROWS"]
+    cols  = data["COLS"]
+    rates = data["RATES"]
 
     d  = params["LATENT_D"]
     sU = params["SIGMA_U"]
@@ -14,21 +17,7 @@ function pmf_lbps(params::Dict, verb::Bool=true)::Dict
     maxT    = params["MAXT"]
 
     # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    cprint("reading data... ", verb) ; ta = time()
-
-    rows  = vec(readdlm(params["FROWS"],  Int))
-    cols  = vec(readdlm(params["FCOLS"],  Int))
-    rates = vec(readdlm(params["FRATES"], Float64))
-
-    cprintln("[done in $(round(time()-ta,1))s]", verb)
-
-    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     cprint("preparing the graph... ", verb) ; ta = time()
-
-    # centre and scale the rates
-    range  = maximum(rates)-minimum(rates)
-    rates -= mean(rates)
-    rates /= range
 
     # there may be discrepancy with lines missing etc
     nU = maximum(rows)
@@ -87,7 +76,9 @@ function pmf_lbps(params::Dict, verb::Bool=true)::Dict
 
     nvars = nU + nV
 
-    x0 = [randn(d) for i in 1:nvars]
+    x0 = [sU*randn(d) for i in 1:nU]
+    append!(x0, [sV*randn(d) for i in 1:nV])
+
     v0 = [randn(d) for i in 1:nvars]
     v0 = map(v->v/norm(v), v0)
 
@@ -100,6 +91,7 @@ function pmf_lbps(params::Dict, verb::Bool=true)::Dict
     (all_evlist, details) = simulate(lsim)
 
     cprintln("... simulation finished ($(round(time()-ta,1))s)", verb)
+    cprintln("... LBPS finished ($(round(time()-tb,1))s)", verb)
 
     # --------------------------
     # Returning relevant results
