@@ -12,6 +12,8 @@ function pmf_lbps(data::Dict, params::Dict, verb::Bool=true)::Dict
     sR = params["SIGMA_R"]
     λr = params["LAMBDAREF"]
 
+    x0 = params["X0"]
+
     expname = params["EXPNAME"]
     maxN    = params["MAXNEVENTS"]
     maxT    = params["MAXT"]
@@ -76,8 +78,7 @@ function pmf_lbps(data::Dict, params::Dict, verb::Bool=true)::Dict
 
     nvars = nU + nV
 
-    x0 = [sU*randn(d) for i in 1:nU]
-    append!(x0, [sV*randn(d) for i in 1:nV])
+    x0 = [x0[((i-1)*30+1):(i*30)] for i in 1:nvars]
 
     v0 = [randn(d) for i in 1:nvars]
     v0 = map(v->v/norm(v), v0)

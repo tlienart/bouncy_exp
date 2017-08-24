@@ -13,7 +13,7 @@ function pmf_ll(
     n = length(rates)
     @assert length(rows)==length(cols)==n "inconsistent dimensions"
 
-    function loglik(x) # neg log
+    function loglik(x;batchsize=n) # neg log
 
         # x vector is a big column vector made of [u; v]
         # u is a big column vector made of [u1;u2;..;uN]
@@ -25,10 +25,12 @@ function pmf_ll(
         # accumulator for likelihood
         s = 0.0
 
+        mask = rand(1:n,batchsize)
+
         # computing everything as negative loglikelihood then returning neg
-        for (k, rk) in enumerate(rates)
+        for (k, rk) in enumerate(rates[mask])
             # for a given rate r_ij, retrieve i,j then ui, uj
-            i,j   = rows[k], cols[k]
+            i,j   = rows[mask[k]], cols[mask[k]]
             ui,vj = u[((i-1)*d+1):(i*d)], v[((j-1)*d+1):(j*d)]
 
             # then it's just a gaussian pdf and we add everything
@@ -36,9 +38,10 @@ function pmf_ll(
         end
         # add the likelihoods corresponding to spherical priors
         s += norm(u)^2/(2su^2) + norm(v)^2/(2sv^2)
-        -s
+        -s*n/batchsize
     end
-    function gradloglik(x)
+
+    function gradloglik(x;batchsize=n)
         mu = 1:(d*nrows)             # mask for u in x
         mv = d*nrows + (1:(d*ncols)) # mask for v in x
         u = x[mu]
@@ -51,9 +54,10 @@ function pmf_ll(
         g[mu] += u/su^2
         g[mv] += v/sv^2
 
+        mask = rand(1:n, batchsize)
         # part associated with rates
-        for (k, rk) in enumerate(rates)
-            i,j   = rows[k], cols[k]
+        for (k, rk) in enumerate(rates[mask])
+            i,j   = rows[mask[k]], cols[mask[k]]
             mui   = ((i-1)*d+1):(i*d) # mask for ui in u
             mvj   = ((j-1)*d+1):(j*d) # mask for vj in v
             ui,vj = u[mui], v[mvj]
@@ -63,7 +67,7 @@ function pmf_ll(
             g[d*nrows+mvj] += (rk - dot(ui, vj)) * ui / sr^2
         end
 
-        g
+        g*n/batchsize
     end
     (loglik,gradloglik)
 end
