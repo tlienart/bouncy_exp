@@ -78,7 +78,7 @@ function pmf_lbps(data::Dict, params::Dict, verb::Bool=true)::Dict
 
     nvars = nU + nV
 
-    x0 = [x0[((i-1)*30+1):(i*30)] for i in 1:nvars]
+    x0 = [x0[((i-1)*d+1):(i*d)] for i in 1:nvars]
 
     v0 = [randn(d) for i in 1:nvars]
     v0 = map(v->v/norm(v), v0)
